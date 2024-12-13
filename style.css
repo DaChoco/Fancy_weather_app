@@ -1,8 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+:root{
+    /*Sunny*/
+    --sky-color: #5296bd;
+    --sunny-text: #feffff;
+    --feels-like-text: #cdeaef;
+
+    --sunny-widget: #6d96b8;
+    --cloudy-widget: #605e69;
+    --night-widget: #212021;
+
+    --nav-bar: #202747;
+    
+}
+
+
 main{
     display: grid;
-    grid-template-columns: 20% 2fr;
+    grid-template-columns: 20% auto;
+    background-color: var(--sky-color);
    
     font-family: 'Poppins';
 }
@@ -10,10 +26,17 @@ ul{
     list-style: none;
     padding: 0;
 }
+li{
+    margin: 1rem 0;
+}
+
+
 
 nav{
     display: flex;
     flex-direction: column;
+    color: var(--sunny-text);
+    background-color: var(--nav-bar);
     
     min-height: 100vh;
 }
@@ -24,10 +47,34 @@ nav{
 
 .min-max-temp{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .search-bar{
-    width: 90%;
+    width: 80%;
     margin: 0 auto;
+    margin-top: 1rem;
+
+}
+
+.main-page{
+    width: min(500px, 100%);
+    margin: 0 auto;
+    color: var(--sunny-text);
+
+}
+
+.location-widget{
+    border-radius: 0.5rem;
+    background-color: var(--sunny-widget);
+    width: 80%;
+    margin: 0 auto;
+}
+
+.location-widget p, .location-widget h4{
+    margin: 0;
+}
+
+.location-widget h5{
+    margin-bottom: 0;
 }

@@ -13,21 +13,27 @@
     <main>
     
             <nav>
+                <h1>Weather</h1>
                 <input type="text" class="search-bar" placeholder="Search for a city" id="search-bar">
                 <ul class="location-container">
                     <li>
                         <div class="location-widget">
-                            <h4>Cape Town</h4>
+                            <h4 class="current-location">Cape Town</h4>
+                            <p class="time-now">14:24</p>
+                            <h5 class="current-conditions">Sunny</h5>
+
+                            <h4></h4>
                         </div>
                     </li>
                     <li>
                         <div class="location-widget">
-                            Hong Kong
+                            <h4>Hong Kong</h4>
+                            <h5 class="current-conditions"></h5>
                         </div>
                     </li>
                     <li>
                         <div class="location-widget">
-                            New York
+                            <h4>New York City</h4>
                         </div>
                     </li>
                 </ul>
@@ -36,11 +42,13 @@
             </nav>
         
         <div class="main-page">
-            <h1 class="current-location">Cape Town</h1>
+            <h1 class="current-location" id="current-loc">Cape Town</h1>
+            <h1 class="current-temp"></h1>
 
         <div class="min-max-temp">
-            <h4 id="condition">Sunny</h4>
-            <h2>L: 16C H: 32C</h2>
+            <h4 id="condition" class="current-conditions"></h4>
+            <h2 id="feel-like">Feels like: </h2>
+            <h2 id="high-low">L:  H:</h2>
         </div>
 
         <div class="hourly-forecast"></div>
