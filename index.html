@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    <script type="module" src="./app.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <main>
+    
+            <nav>
+                <input type="text" class="search-bar" placeholder="Search for a city" id="search-bar">
+                <ul class="location-container">
+                    <li>
+                        <div class="location-widget">
+                            <h4>Cape Town</h4>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="location-widget">
+                            Hong Kong
+                        </div>
+                    </li>
+                    <li>
+                        <div class="location-widget">
+                            New York
+                        </div>
+                    </li>
+                </ul>
+
+                
+            </nav>
+        
+        <div class="main-page">
+            <h1 class="current-location">Cape Town</h1>
+
+        <div class="min-max-temp">
+            <h4 id="condition">Sunny</h4>
+            <h2>L: 16C H: 32C</h2>
+        </div>
+
+        <div class="hourly-forecast"></div>
+
+        </div>
+        
+    </main>
+    
+</body>
+</html>
