@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+html{
+    padding: 0;
+    margin: 0;
+}
 :root{
     /*Sunny*/
     --sky-color: #5296bd;
@@ -11,7 +15,14 @@
     --night-widget: #212021;
 
     --nav-bar: #202747;
+
     
+    
+}
+
+body{
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -19,6 +30,8 @@ main{
     display: grid;
     grid-template-columns: 20% auto;
     background-color: var(--sky-color);
+    width: 100%;
+    height: 100%;
    
     font-family: 'Poppins';
 }
@@ -43,6 +56,7 @@ nav{
 
 .main-page{
     position: relative;
+    min-height: 100vh;
 }
 
 .min-max-temp{
@@ -51,9 +65,9 @@ nav{
 }
 
 .search-bar{
-    width: 80%;
-    margin: 0 auto;
+    width: 100%;
     margin-top: 1rem;
+    border-radius: 0.5rem;
 
 }
 
@@ -71,10 +85,40 @@ nav{
     margin: 0 auto;
 }
 
+.location-widget-{
+    border-radius: 0.5rem;
+    background-color: var(--sunny-widget);
+    width: 80%;
+    margin: 0 auto;
+}
+.cloudy-day{
+    background-image: url(/images/Cloudy.jpg);
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;   
+}
+
 .location-widget p, .location-widget h4{
     margin: 0;
 }
 
 .location-widget h5{
     margin-bottom: 0;
+
 }
+
+.topnav{
+    margin: 1rem auto;
+}
+.topnav h1{
+    width: 50%;
+    justify-self: left;
+    margin: 0;
+    
+}
+
+.title-box{
+    display: flex;
+    flex-direction: row;
+}
+

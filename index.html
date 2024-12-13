@@ -13,27 +13,33 @@
     <main>
     
             <nav>
-                <h1>Weather</h1>
-                <input type="text" class="search-bar" placeholder="Search for a city" id="search-bar">
+                <div class="topnav">
+                    <h1>Weather</h1>
+                    <input type="text" class="search-bar" placeholder="Search for a city" id="search-bar">
+                </div>
+                
                 <ul class="location-container">
                     <li>
-                        <div class="location-widget">
+                        <!--For current location-->
+                        <div class="location-widget" id="location-widget-main">
                             <h4 class="current-location">Cape Town</h4>
-                            <p class="time-now">14:24</p>
+                            <p id="time-now">14:24</p>
                             <h5 class="current-conditions">Sunny</h5>
 
                             <h4></h4>
                         </div>
+                        <!--End of current location-->
                     </li>
                     <li>
                         <div class="location-widget">
                             <h4>Hong Kong</h4>
-                            <h5 class="current-conditions"></h5>
+                            <h5 class="current-conditions-away"></h5>
                         </div>
                     </li>
                     <li>
                         <div class="location-widget">
                             <h4>New York City</h4>
+                            <h5 class="current-conditions-away"></h5>
                         </div>
                     </li>
                 </ul>
@@ -42,7 +48,11 @@
             </nav>
         
         <div class="main-page">
-            <h1 class="current-location" id="current-loc">Cape Town</h1>
+            <div class="title-box">
+                <img src="" alt="icon" id="Weather-icon">
+                <h1 class="current-location" id="current-loc">Cape Town</h1>
+            </div>
+            
             <h1 class="current-temp"></h1>
 
         <div class="min-max-temp">
