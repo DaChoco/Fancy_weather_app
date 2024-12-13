@@ -10,6 +10,8 @@ const current_conditions = document.querySelectorAll('.current-conditions')
 const feelslike = document.getElementById('feel-like')
 const highlow = document.getElementById('high-low')
 
+const dropdown = document.querySelector('.dropsearch')
+
 const currentTime = document.getElementById('time-now')
 
 const location_widgets = document.getElementById('location-widget-main');
@@ -17,17 +19,19 @@ const weather_icon = document.getElementById('Weather-icon');
 
 const main_pageBG = document.querySelector('main');
 
+const listSelect = document.querySelectorAll('li')
+
 let arrayTemps = []; //for each day of this week
 
 function backgroundWeather(condition){
-    if (condition == "Partly Cloudy"){
+    if (condition == "Partly cloudy" || condition == "Moderate rain at times"){
         location_widgets.classList.add('cloudy-day')
         main_pageBG.classList.add('cloudy-day');
 
         
     }
     else if (condition == "Clear" || condition == "Sunny"){
-        console.log(condiiton);
+        console.log(condition);
         console.log('Clear skies')
         location_widgets.classList.remove('cloudy-day')
         main_pageBG.classList.remove('cloudy-day')
@@ -55,8 +59,6 @@ const getWeather = async (location) =>{
 
         const local_time = data.location.localtime;
         const my_icon = data.current.condition.icon;
-
-        console.log(feel);
     
         return {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon};
 
@@ -68,6 +70,20 @@ const getWeather = async (location) =>{
 } 
 
 window.addEventListener('DOMContentLoaded', function(){
+
+    searchBar.onkeyup = function(){ //auto complete
+        let result = [];
+        let input = searchBar.value
+
+        
+        if (input.length){
+            result = Object.values(searchAutoComplete(input)).filter((keyword)=>{
+             keyword.toLowerCase().includes(input)
+             });
+            console.log(result);
+        }
+
+    }
 
     searchBar.addEventListener('keydown', async function(e){
         if (e.key === 'Enter'){
@@ -81,7 +97,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 console.log(`Current Temp: ${current_temp} Conditions: ${conditions} High: ${high_temp} Low: ${low_temp} Feels like ${feel}`); 
                 //making sure we extracted the information
 
-                feelslike.textContent = `Feels like: ${feel}`;
+                feelslike.textContent = `Feels like: ${feel}°C`;
                 highlow.textContent = `H: ${high_temp}°C L: ${low_temp}°C `
                 currentTime.textContent =  local_time;
                 weather_icon.src = my_icon;
@@ -93,7 +109,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 
                 })
                 current_temperature.forEach(function(item){
-                    item.textContent = current_temp;
+                    item.textContent = `${current_temp}°C`;
                 })
 
                 current_conditions.forEach(function(e){
@@ -109,6 +125,55 @@ window.addEventListener('DOMContentLoaded', function(){
 
     
 })
+
+//searching improvements
+
+function displayResults(result){
+    let content = "<ul>"
+
+    result.forEach((list)=>{
+        content += `<li><h6>${list.name}, ${list.region}, ${list.country}</h6></li>`
+    })
+
+    content += "</ul>"
+    dropdown.innerHTML = content;
+
+    fillautoSearch()
+}
+
+const searchAutoComplete = async (location_search) =>{
+    const url = `http://api.weatherapi.com/v1/search.json?key=${config.MY_API_KEY}&q=${location_search}`;
+
+    try{
+        //extract the auto complete api which gives us an object in json format
+        const response = await fetch(url);
+        const data = await response.json();
+        displayResults(data);
+        return data;
+
+    } catch (error){
+        console.error("Error attempting to search: ", error);
+        return null;
+    }
+}
+
+function fillautoSearch(){
+
+    listSelect.forEach(function(e){
+
+        e.addEventListener("click", function(){
+            searchBar.value = e.textContent;
+        })
+        
+    })
+    
+}
+
+
+
+
+
+
 
 
 
