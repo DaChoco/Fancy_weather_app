@@ -1,5 +1,12 @@
 import { config } from "./config.js";
 
+const days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const d = new Date();
+
+const todayIndex = d.getDay();
+console.log(todayIndex)
+let today = days[todayIndex];
+
 const elements = { //cache everything once this site loads
     searchBar: document.getElementById('search-bar'),
     current_locale: document.querySelectorAll('.current-location'),
@@ -13,10 +20,6 @@ const elements = { //cache everything once this site loads
     weather_icon: document.getElementById('Weather-icon'),
     main_pageBG: document.querySelector('main')
 }
-
-
-
-
 
 function backgroundWeather(condition){
     if (condition == "Moderate rain at times" || condition == "Cloudy" || condition == "Overcast"){
@@ -42,7 +45,7 @@ function backgroundWeather(condition){
         elements.location_widgets.classList.remove('not-cloudy-day')
         elements.main_pageBG.classList.remove('not-cloudy-day')
     }
-    else if (condition == "Sunny"){
+    else if (condition == "Sunny" || condition == "Clear"){
         elements.location_widgets.classList.add('not-cloudy-day')
         elements.main_pageBG.classList.add('not-cloudy-day')
         console.log(elements.weather_icon)
@@ -148,6 +151,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
                 elements.searchBar.value = "";
                 backgroundWeather(conditions);
+                ForecastData(location);
 
 
             }catch (error) { console.error('Error fetching weather data:', error)};
@@ -236,6 +240,8 @@ window.addEventListener("load", async function(){
         })
         backgroundWeather(conditions);
 
+        ForecastData("Cape Town");
+
 
     }catch (error) {console.error('Error fetching weather data:', error)};
 
@@ -244,9 +250,47 @@ window.addEventListener("load", async function(){
 
 //forecast for the week data extraction:
 
+const mini_icon = document.querySelectorAll('.day-icons');
+const small_temp = document.querySelectorAll('.small-temp');
+const days_week = document.querySelectorAll('.daysWeek')
+
 async function ForecastData(location){
+    let i;
     
     const url = `${config.MY_API_URL}/forecast.json?key=${config.MY_API_KEY}&q=${location}&days=7&aqi=no&alerts=no`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    //days of the week after the current day
+        mini_icon.forEach((e, index) =>{
+            let i = index+1;
+            
+            const day_icon = data.forecast.forecastday[i].day.condition.icon;
+            e.src = day_icon;
+        })
+
+        small_temp.forEach((e,index)=>{
+            let i = index + 1;
+            const day_temp = data.forecast.forecastday[i].day.avgtemp_c
+            e.textContent = `${day_temp} °C`
+
+        })
+
+        days_week.forEach((e,index)=>{
+            //the day today
+            let i = index + (todayIndex + 1);
+            if (i >= days.length){
+                i = 0 + index;
+            }
+            e.textContent = days[i];
+            console.log(days[i])
+        })
+
+
+    
+
+    
 
     
 

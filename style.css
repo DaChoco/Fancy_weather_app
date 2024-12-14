@@ -61,6 +61,7 @@ nav{
         'main main highlights'
         'forecast forecast highlights'
         'forecast forecast highlights';
+    row-gap: 20px;
 }
 
 .main-widget{
@@ -70,6 +71,7 @@ nav{
     
     width: 80%;
     margin: auto;
+    margin-top: 1rem;
     color: var(--sunny-text);
     background-color: var(--sunny-widget);
     border-radius: 0.55rem;
@@ -226,19 +228,45 @@ nav{
 
 /*Here is the forecast region*/
 .forecast-widget{
-    flex: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     grid-area: forecast;
     position: relative;
-    height: 80%;
+    height: max-content;
     width: 80%;
     margin: auto;
     margin-bottom: 1rem;
     color: var(--sunny-text);
     background-color: var(--sunny-widget);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.forecast-heading{
+    width: 25%;
 }
 
 .day-card{
     display: flex;
     flex-direction: column;
+    background-color: var(--cloudy-widget);
+    align-items: center;
+    justify-items: center;
+    border-radius: 0.6rem;
+    padding: 1rem;
+    margin: 0.5rem;
+    width: calc(100%/7);
 }
+
+.day-icons{
+    width: 50%;
+    height: 50%;
+}
+
+.days-container{
+    display: flex;
+    flex-direction: row;
+}
+
 
