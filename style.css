@@ -56,17 +56,34 @@ nav{
 }
 
 .main-page{
-    position: relative;
-    min-height: 100vh;
+    display: grid;
+    grid-template-areas: 
+        'main main highlights'
+        'forecast forecast highlights'
+        'forecast forecast highlights';
 }
 
-.main-page h1{
-    margin: 0 auto;
+.main-widget{
+    grid-area: main;
+    position: relative;
+    height: max-content;
+    
+    width: 80%;
+    margin: auto;
+    color: var(--sunny-text);
+    background-color: var(--sunny-widget);
+    border-radius: 0.55rem;
+    padding: 1rem;
+}
+
+.main-widget h1{
+    margin: auto;
 }
 
 .min-max-temp{
     display: flex;
     flex-direction: column;
+    width: 50%;
 }
 
 .search-bar{
@@ -76,13 +93,6 @@ nav{
     border-radius: 0.5rem;
     border: none;
     padding: 10px 0;
-
-}
-
-.main-page{
-    width: min(500px, 100%);
-    margin: 0 auto;
-    color: var(--sunny-text);
 
 }
 
@@ -154,8 +164,12 @@ nav{
     display: flex;
     flex-direction: row;
     margin-top: 1rem;
+    width: 100%;
 }
 
+#Weather-icon{
+    width: 35%;
+}
 #feel-like{
     color: var(--feels-like-text);
 
