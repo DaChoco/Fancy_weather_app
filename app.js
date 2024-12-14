@@ -16,12 +16,14 @@ const elements = { //cache everything once this site loads
 
 
 
-let arrayTemps = []; //for each day of this week
+
 
 function backgroundWeather(condition){
-    if (condition == "Moderate rain at times" || condition == "Cloudy"){
+    if (condition == "Moderate rain at times" || condition == "Cloudy" || condition == "Overcast"){
         elements.location_widgets.classList.add('cloudy-day')
         elements.main_pageBG.classList.add('cloudy-day');
+
+        elements.weather_icon.src = "./icons/cloudy.png"
 
         //removals
         elements.location_widgets.classList.remove('not-as-cloudy-day')
@@ -32,6 +34,7 @@ function backgroundWeather(condition){
     else if(condition == "Partly cloudy"){
         elements.location_widgets.classList.add('not-as-cloudy-day')
         elements.main_pageBG.classList.add('not-as-cloudy-day')
+        elements.weather_icon.src = "./icons/cloudy-sun.png"
 
         //removals
         elements.location_widgets.classList.remove('cloudy-day')
@@ -39,9 +42,11 @@ function backgroundWeather(condition){
         elements.location_widgets.classList.remove('not-cloudy-day')
         elements.main_pageBG.classList.remove('not-cloudy-day')
     }
-    else if (condition == "Clear" || condition == "Sunny"){
+    else if (condition == "Sunny"){
         elements.location_widgets.classList.add('not-cloudy-day')
         elements.main_pageBG.classList.add('not-cloudy-day')
+        console.log(elements.weather_icon)
+        elements.weather_icon.src = "./icons/sun.png"
 
         //removals
         elements.location_widgets.classList.remove('cloudy-day')
@@ -117,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function(){
             try{
                 const {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon} = await getWeather(location);
 
-                backgroundWeather(conditions);
+                
 
                 console.log(`Current Temp: ${current_temp} Conditions: ${conditions} High: ${high_temp} Low: ${low_temp} Feels like ${feel}`); 
                 //making sure we extracted the information
@@ -125,7 +130,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 elements.feelslike.textContent = `Feels like: ${feel}°C`;
                 elements.highlow.textContent = `H: ${high_temp}°C L: ${low_temp}°C `
                 elements.currentTime.textContent =  local_time;
-                elements.weather_icon.src = my_icon;
+                
 
                 //--For each, seperating them to un clutter my code
 
@@ -142,6 +147,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 })
 
                 elements.searchBar.value = "";
+                backgroundWeather(conditions);
 
 
             }catch (error) { console.error('Error fetching weather data:', error)};
@@ -205,13 +211,15 @@ window.addEventListener("load", async function(){
     try{
         const {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon} = await getWeather(DefaultLocation);
 
-        backgroundWeather(conditions);
+        
         //making sure we extracted the information
 
         elements.feelslike.textContent = `Feels like: ${feel} °C`;
         elements.highlow.textContent = `H: ${high_temp} °C L: ${low_temp} °C `
         elements.currentTime.textContent =  local_time;
-        elements.weather_icon.src = my_icon;
+        
+
+        console.log(my_icon);
 
         //--For each, seperating them to un clutter my code
 
@@ -226,12 +234,23 @@ window.addEventListener("load", async function(){
         elements.current_conditions.forEach(function(e){
             e.textContent = conditions;
         })
+        backgroundWeather(conditions);
 
 
     }catch (error) {console.error('Error fetching weather data:', error)};
 
 
 })
+
+//forecast for the week data extraction:
+
+async function ForecastData(location){
+    
+    const url = `${config.MY_API_URL}/forecast.json?key=${config.MY_API_KEY}&q=${location}&days=7&aqi=no&alerts=no`;
+
+    
+
+}
 
 
 
