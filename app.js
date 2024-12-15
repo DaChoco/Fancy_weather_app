@@ -4,7 +4,7 @@ const days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
 const d = new Date();
 
 const todayIndex = d.getDay();
-let today = days[todayIndex];
+
 
 //forecast for the week data extraction:
 
@@ -26,43 +26,53 @@ const elements = { //cache everything once this site loads
     main_pageBG: document.querySelector('main')
 }
 
-function backgroundWeather(condition){
-    if (condition == "Moderate rain at times" || condition == "Cloudy" || condition == "Overcast"){
-        elements.location_widgets.classList.add('cloudy-day')
-        elements.main_pageBG.classList.add('cloudy-day');
-
-        elements.weather_icon.src = "./icons/cloudy.png"
-
-        //removals
-        elements.location_widgets.classList.remove('not-as-cloudy-day')
-        elements.main_pageBG.classList.remove('not-as-cloudy-day')
-        elements.location_widgets.classList.remove('not-cloudy-day')
-        elements.main_pageBG.classList.remove('not-cloudy-day')
+window.addEventListener("load", async function(){
+    let DefaultLocation
+    if (!localStorage.getItem('YourLocation')){
+        DefaultLocation = await getMyLocation();
     }
-    else if(condition == "Partly cloudy"){
-        elements.location_widgets.classList.add('not-as-cloudy-day')
-        elements.main_pageBG.classList.add('not-as-cloudy-day')
-        elements.weather_icon.src = "./icons/cloudy-sun.png"
-
-        //removals
-        elements.location_widgets.classList.remove('cloudy-day')
-        elements.main_pageBG.classList.remove('cloudy-day')
-        elements.location_widgets.classList.remove('not-cloudy-day')
-        elements.main_pageBG.classList.remove('not-cloudy-day')
+    else{
+        DefaultLocation = this.localStorage.getItem('YourLocation')
     }
-    else if (condition == "Sunny" || condition == "Clear"){
-        elements.location_widgets.classList.add('not-cloudy-day')
-        elements.main_pageBG.classList.add('not-cloudy-day')
-        elements.weather_icon.src = "./icons/sun.png"
+    
 
-        //removals
-        elements.location_widgets.classList.remove('cloudy-day')
-        elements.main_pageBG.classList.remove('cloudy-day')
-        elements.location_widgets.classList.remove('not-as-cloudy-day')
-        elements.main_pageBG.classList.remove('not-as-cloudy-day')
-    }
-}
- 
+
+    try{
+        const {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon} = await getWeather(DefaultLocation);
+
+        
+        //making sure we extracted the information
+
+        elements.feelslike.textContent = `Feels like: ${feel} °C`;
+        elements.highlow.textContent = `H: ${high_temp} °C L: ${low_temp} °C `
+        elements.currentTime.textContent =  local_time;
+        
+
+        
+
+        //--For each, seperating them to un clutter my code
+
+        elements.current_locale.forEach(function(e){
+            e.textContent = DefaultLocation;
+        
+        })
+        elements.current_temperature.forEach(function(e){
+            e.textContent = `${current_temp}°C`;
+        })
+
+        elements.current_conditions.forEach(function(e){
+            e.textContent = conditions;
+        })
+        backgroundWeather(conditions);
+
+        
+
+
+    }catch (error) {console.error('Error fetching weather data:', error)};
+})
+
+
+//---START OF API FUNCTIONS
 
 //this function extracts the current temperature, the current high, current low, and current conditions
 const getWeather = async (location) =>{
@@ -118,6 +128,26 @@ const getWeather = async (location) =>{
      
 } 
 
+
+
+const searchAutoComplete = async (location_search) =>{
+    const url = `http://api.weatherapi.com/v1/search.json?key=${config.MY_API_KEY}&q=${location_search}`;
+
+    try{
+        //extract the auto complete api which gives us an object in json format
+        const response = await fetch(url);
+        const data = await response.json();
+
+        console.log("Called the searching json")
+        displayResults(data);
+        return data;
+
+    } catch (error){
+        console.error("Error attempting to search: ", error);
+        return null;
+    }
+}
+
 const getMyLocation = async () => {
 
     const url = "http://ip-api.com/json/";
@@ -133,9 +163,97 @@ const getMyLocation = async () => {
 
 }
 
+//---END OF API FUNCTIONS
+
+//START OF GENERIC FUNCTIONS
+//searching improvements
+
+function displayResults(result){
+    let content = "<ul>"
+
+    result.forEach((list)=>{
+        content += `<li><h5>${list.name}, ${list.country}</h5></li>`
+    })
+
+    content += "</ul>"
+    elements.dropdown.innerHTML = content;
+
+    fillautoSearch()
+}
+
+
+
+function fillautoSearch(){
+    elements.dropdown.removeEventListener("click", function(e){
+        if (e.target && e.target.tagName === 'LI'){
+            elements.searchBar.value = e.target.textContent;
+            elements.dropdown.innerHTML = "";
+            
+        }
+    })
+
+    elements.dropdown.addEventListener('click', function(e){
+        if (e.target && e.target.tagName === 'LI'){
+            elements.searchBar.value = e.target.textContent;
+            elements.dropdown.innerHTML = "";
+            
+        }
+    })
+    
+    
+}
+
+function debounceSearch(fn, delay){
+    let timer;
+
+    return function(...args){
+        clearTimeout(timer);
+        timer = setTimeout(()=> fn.apply(this, args), delay)
+    }
+   
+}
+
+function backgroundWeather(condition){
+    if (condition == "Moderate rain at times" || condition == "Cloudy" || condition == "Overcast" || condition == "Light snow"){
+        elements.location_widgets.classList.add('cloudy-day')
+        elements.main_pageBG.classList.add('cloudy-day');
+
+        elements.weather_icon.src = "./icons/cloudy.png"
+
+        //removals
+        elements.location_widgets.classList.remove('not-as-cloudy-day')
+        elements.main_pageBG.classList.remove('not-as-cloudy-day')
+        elements.location_widgets.classList.remove('not-cloudy-day')
+        elements.main_pageBG.classList.remove('not-cloudy-day')
+    }
+    else if(condition == "Partly cloudy"){
+        elements.location_widgets.classList.add('not-as-cloudy-day')
+        elements.main_pageBG.classList.add('not-as-cloudy-day')
+        elements.weather_icon.src = "./icons/cloudy-sun.png"
+
+        //removals
+        elements.location_widgets.classList.remove('cloudy-day')
+        elements.main_pageBG.classList.remove('cloudy-day')
+        elements.location_widgets.classList.remove('not-cloudy-day')
+        elements.main_pageBG.classList.remove('not-cloudy-day')
+    }
+    else if (condition == "Sunny" || condition == "Clear"){
+        elements.location_widgets.classList.add('not-cloudy-day')
+        elements.main_pageBG.classList.add('not-cloudy-day')
+        elements.weather_icon.src = "./icons/sun.png"
+
+        //removals
+        elements.location_widgets.classList.remove('cloudy-day')
+        elements.main_pageBG.classList.remove('cloudy-day')
+        elements.location_widgets.classList.remove('not-as-cloudy-day')
+        elements.main_pageBG.classList.remove('not-as-cloudy-day')
+    }
+}
+//END OF GENERIC FUNCTIONS
+
 window.addEventListener('DOMContentLoaded', function(){
 
-    elements.searchBar.onkeyup = function(){ //auto complete
+    elements.searchBar.addEventListener('input',debounceSearch(function(){ //search auto completions
         let result = [];
         let input = elements.searchBar.value
 
@@ -147,11 +265,12 @@ window.addEventListener('DOMContentLoaded', function(){
            
         }
 
-    }
+    }, 350))
 
     elements.searchBar.addEventListener('keydown', async function(e){
         if (e.key === 'Enter'){
             let location = elements.searchBar.value;
+            localStorage.setItem('YourLocation', location)
 
             try{
                 const {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon} = await getWeather(location);
@@ -185,106 +304,12 @@ window.addEventListener('DOMContentLoaded', function(){
                 
 
 
-            }catch (error) { console.error('Error fetching weather data:', error)};
-            
-            
+            }catch (error) { console.error('Error fetching weather data:', error)};     
         }
-    })
-
-    
+    })   
 })
 
-//searching improvements
 
-function displayResults(result){
-    let content = "<ul>"
-
-    result.forEach((list)=>{
-        content += `<li><h5>${list.name}, ${list.country}</h5></li>`
-    })
-
-    content += "</ul>"
-    elements.dropdown.innerHTML = content;
-
-    fillautoSearch()
-}
-
-const searchAutoComplete = async (location_search) =>{
-    const url = `http://api.weatherapi.com/v1/search.json?key=${config.MY_API_KEY}&q=${location_search}`;
-
-    try{
-        //extract the auto complete api which gives us an object in json format
-        const response = await fetch(url);
-        const data = await response.json();
-        displayResults(data);
-        return data;
-
-    } catch (error){
-        console.error("Error attempting to search: ", error);
-        return null;
-    }
-}
-
-function fillautoSearch(){
-
-    elements.dropdown.addEventListener('click', function(e){
-        if (e.target && e.target.tagName === 'LI'){
-            elements.searchBar.value = e.target.textContent;
-            elements.dropdown.innerHTML = "";
-            
-        }
-    })
-    
-}
-
-
-
-window.addEventListener("load", async function(){
-    let DefaultLocation
-    if (!localStorage.getItem('YourLocation')){
-        DefaultLocation = await getMyLocation();
-    }
-    else{
-        DefaultLocation = this.localStorage.getItem('YourLocation')
-    }
-    
-
-
-    try{
-        const {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon} = await getWeather(DefaultLocation);
-
-        
-        //making sure we extracted the information
-
-        elements.feelslike.textContent = `Feels like: ${feel} °C`;
-        elements.highlow.textContent = `H: ${high_temp} °C L: ${low_temp} °C `
-        elements.currentTime.textContent =  local_time;
-        
-
-        
-
-        //--For each, seperating them to un clutter my code
-
-        elements.current_locale.forEach(function(e){
-            e.textContent = DefaultLocation;
-        
-        })
-        elements.current_temperature.forEach(function(e){
-            e.textContent = `${current_temp}°C`;
-        })
-
-        elements.current_conditions.forEach(function(e){
-            e.textContent = conditions;
-        })
-        backgroundWeather(conditions);
-
-        
-
-
-    }catch (error) {console.error('Error fetching weather data:', error)};
-
-
-})
 
 
 

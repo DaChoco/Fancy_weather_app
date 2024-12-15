@@ -25,6 +25,7 @@ html{
 body{
     margin: 0;
     padding: 0;
+    transition: 0.5s;
 }
 
 
@@ -275,4 +276,6 @@ main.cloudy-day .main-page .forecast-widget{
 main.cloudy-day .main-page .forecast-widget .days-container .day-card{
     background-color: var(--night-widget);
 }
+
+
 
