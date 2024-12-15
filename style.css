@@ -61,7 +61,7 @@ nav{
         'main main highlights'
         'forecast forecast highlights'
         'forecast forecast highlights';
-    row-gap: 20px;
+    row-gap: 10px;
 }
 
 .main-widget{
@@ -70,8 +70,7 @@ nav{
     height: max-content;
     
     width: 80%;
-    margin: auto;
-    margin-top: 1rem;
+    margin: 1rem auto;
     color: var(--sunny-text);
     background-color: var(--sunny-widget);
     border-radius: 0.55rem;
@@ -242,6 +241,9 @@ nav{
     border-radius: 0.5rem;
     padding: 1rem;
 }
+main.cloudy-day .main-page .forecast-widget{
+    background-color: var(--cloudy-widget);
+}
 
 .forecast-heading{
     width: 25%;
@@ -267,6 +269,10 @@ nav{
 .days-container{
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
+main.cloudy-day .main-page .forecast-widget .days-container .day-card{
+    background-color: var(--night-widget);
+}
 
