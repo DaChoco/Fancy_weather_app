@@ -26,6 +26,7 @@ body{
     margin: 0;
     padding: 0;
     transition: 0.5s;
+
 }
 
 
@@ -96,6 +97,12 @@ nav{
     margin: 0;
 }
 
+.AddingWidgets{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
 .search-bar{
     width: 80%;
     justify-self: center;
@@ -103,6 +110,8 @@ nav{
     border-radius: 0.5rem;
     border: none;
     padding: 10px 0;
+    font-family: "Poppins";
+    font-weight: 500;
 
 }
 
@@ -277,5 +286,14 @@ main.cloudy-day .main-page .forecast-widget .days-container .day-card{
     background-color: var(--night-widget);
 }
 
+.AddorHide{
+    grid-area: highlights;
+    color: var(--sunny-text);
+    transition: 250ms;
+}
 
+.AddorHide:hover{
+    color: var(--nav-bar);
+    scale: 1.01;
+}
 

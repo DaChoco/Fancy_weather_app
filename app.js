@@ -11,6 +11,7 @@ const todayIndex = d.getDay();
 const mini_icon = document.querySelectorAll('.day-icons');
 const small_temp = document.querySelectorAll('.small-temp');
 const days_week = document.querySelectorAll('.daysWeek')
+const condition_extract = document.querySelector('.current-conditions')
 
 const elements = { //cache everything once this site loads
     searchBar: document.getElementById('search-bar'),
@@ -23,10 +24,14 @@ const elements = { //cache everything once this site loads
     currentTime: document.getElementById('time-now'),
     location_widgets: document.getElementById('location-widget-main'),
     weather_icon: document.getElementById('Weather-icon'),
-    main_pageBG: document.querySelector('main')
+    main_pageBG: document.querySelector('main'),
+    locationContainer: document.querySelector('.location-container'),
+    addBTN: document.getElementById('addbtn'),
+    removeBTN: document.getElementById('removebtn')
 }
 
 window.addEventListener("load", async function(){
+    displayAddBtn()
     let DefaultLocation
     if (!localStorage.getItem('YourLocation')){
         DefaultLocation = await getMyLocation();
@@ -38,7 +43,7 @@ window.addEventListener("load", async function(){
 
 
     try{
-        const {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon} = await getWeather(DefaultLocation);
+        const {current_temp, high_temp, low_temp, conditions, feel, local_time} = await getWeather(DefaultLocation);
 
         
         //making sure we extracted the information
@@ -119,7 +124,7 @@ const getWeather = async (location) =>{
         })
 
     
-        return {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon};
+        return {current_temp, high_temp, low_temp, conditions, feel, local_time};
 
     } catch (error) {
             console.error('Error fetching weather data:', error);
@@ -168,6 +173,18 @@ const getMyLocation = async () => {
 //START OF GENERIC FUNCTIONS
 //searching improvements
 
+function displayAddBtn(){
+    if (elements.addBTN.textContent == localStorage.getItem("YourLocation")){
+        elements.addBTN.style.visibility = "hidden";
+
+    }
+    else{
+        elements.addBTN.style.visibility = "visible";
+        console.log("Showing the add button again")
+    }
+
+}
+
 function displayResults(result){
     let content = "<ul>"
 
@@ -180,6 +197,23 @@ function displayResults(result){
 
     fillautoSearch()
 }
+
+function createWidgets(location, conditions, time){
+    let content = "<li>"
+    content += `<div class="location-widget" id="location-widget-main">
+        <h4 class="current-location">${location}</h4>
+        <p id="time-now">${time}</p>
+        <h5 class="current-conditions">${conditions}</h5>
+                </div>`
+
+    content += "</li>"
+
+    
+    elements.locationContainer.innerHTML += content;
+
+    
+}
+
 
 
 
@@ -258,7 +292,7 @@ window.addEventListener('DOMContentLoaded', function(){
         let input = elements.searchBar.value
 
         
-        if (input.length){
+        if (input.length>=3){
             result = Object.values(searchAutoComplete(input)).filter((keyword)=>{
              keyword.toLowerCase().includes(input)
              });
@@ -267,13 +301,16 @@ window.addEventListener('DOMContentLoaded', function(){
 
     }, 350))
 
+    
+
     elements.searchBar.addEventListener('keydown', async function(e){
         if (e.key === 'Enter'){
             let location = elements.searchBar.value;
+            displayAddBtn()
             localStorage.setItem('YourLocation', location)
 
             try{
-                const {current_temp, high_temp, low_temp, conditions, feel, local_time, my_icon} = await getWeather(location);
+                const {current_temp, high_temp, low_temp, conditions, feel, local_time} = await getWeather(location);
 
                 
 
@@ -306,7 +343,17 @@ window.addEventListener('DOMContentLoaded', function(){
 
             }catch (error) { console.error('Error fetching weather data:', error)};     
         }
+
+       
     })   
+    elements.addBTN.addEventListener("click", function(){
+        let location
+        elements.current_locale.forEach(function(e){
+            location = e.textContent;
+        })
+        createWidgets(location, condition_extract.textContent, elements.currentTime.textContent);
+        console.log("Hello")
+    })
 })
 
 
