@@ -12,6 +12,8 @@ const mini_icon = document.querySelectorAll('.day-icons');
 const small_temp = document.querySelectorAll('.small-temp');
 const days_week = document.querySelectorAll('.daysWeek')
 const condition_extract = document.querySelector('.current-conditions')
+const mini_temp = document.querySelector(".mini-temp")
+let now_temp
 
 const elements = { //cache everything once this site loads
     searchBar: document.getElementById('search-bar'),
@@ -32,6 +34,7 @@ const elements = { //cache everything once this site loads
 
 window.addEventListener("load", async function(){
     displayAddBtn()
+    
     let DefaultLocation
     if (!localStorage.getItem('YourLocation')){
         DefaultLocation = await getMyLocation();
@@ -69,6 +72,7 @@ window.addEventListener("load", async function(){
             e.textContent = conditions;
         })
         backgroundWeather(conditions);
+        elements.locationContainer.innerHTML += localStorage.getItem("Added_Widgets")
 
         
 
@@ -198,18 +202,23 @@ function displayResults(result){
     fillautoSearch()
 }
 
-function createWidgets(location, conditions, time){
-    let content = "<li>"
-    content += `<div class="location-widget" id="location-widget-main">
+function createWidgets(location, conditions, time, temp){
+    let content = "";
+    content += `
+    <li>
+        
+        <div class="location-widget" id="location-widget-main">
         <h4 class="current-location">${location}</h4>
         <p id="time-now">${time}</p>
         <h5 class="current-conditions">${conditions}</h5>
-                </div>`
-
-    content += "</li>"
+        <h5 class="current-temp">${temp}</h5>
+        </div>
+        
+    </li>`
 
     
     elements.locationContainer.innerHTML += content;
+    localStorage.setItem("Added_Widgets", content)
 
     
 }
@@ -248,7 +257,7 @@ function debounceSearch(fn, delay){
 }
 
 function backgroundWeather(condition){
-    if (condition == "Moderate rain at times" || condition == "Cloudy" || condition == "Overcast" || condition == "Light snow"){
+    if (condition == "Cloudy" || condition == "Overcast"){
         elements.location_widgets.classList.add('cloudy-day')
         elements.main_pageBG.classList.add('cloudy-day');
 
@@ -259,6 +268,32 @@ function backgroundWeather(condition){
         elements.main_pageBG.classList.remove('not-as-cloudy-day')
         elements.location_widgets.classList.remove('not-cloudy-day')
         elements.main_pageBG.classList.remove('not-cloudy-day')
+    }
+    else if (condition.includes('snow')){
+        elements.location_widgets.classList.add('cloudy-day')
+        elements.main_pageBG.classList.add('cloudy-day');
+
+        elements.weather_icon.src = "./icons/snow.png"
+
+        //removals
+        elements.location_widgets.classList.remove('not-as-cloudy-day')
+        elements.main_pageBG.classList.remove('not-as-cloudy-day')
+        elements.location_widgets.classList.remove('not-cloudy-day')
+        elements.main_pageBG.classList.remove('not-cloudy-day')
+
+    }
+    else if (condition.includes('rain')){
+        elements.location_widgets.classList.add('cloudy-day')
+        elements.main_pageBG.classList.add('cloudy-day');
+
+        elements.weather_icon.src = "./icons/rain.png"
+
+        //removals
+        elements.location_widgets.classList.remove('not-as-cloudy-day')
+        elements.main_pageBG.classList.remove('not-as-cloudy-day')
+        elements.location_widgets.classList.remove('not-cloudy-day')
+        elements.main_pageBG.classList.remove('not-cloudy-day')
+
     }
     else if(condition == "Partly cloudy"){
         elements.location_widgets.classList.add('not-as-cloudy-day')
@@ -292,19 +327,20 @@ window.addEventListener('DOMContentLoaded', function(){
         let input = elements.searchBar.value
 
         
-        if (input.length>=3){
+        if (input.length>=2){
             result = Object.values(searchAutoComplete(input)).filter((keyword)=>{
              keyword.toLowerCase().includes(input)
              });
            
         }
 
-    }, 350))
+    }, 250))
 
     
 
     elements.searchBar.addEventListener('keydown', async function(e){
         if (e.key === 'Enter'){
+            
             let location = elements.searchBar.value;
             displayAddBtn()
             localStorage.setItem('YourLocation', location)
@@ -330,6 +366,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 })
                 elements.current_temperature.forEach(function(item){
                     item.textContent = `${current_temp}°C`;
+                    now_temp = current_temp;
                 })
 
                 elements.current_conditions.forEach(function(e){
@@ -347,11 +384,13 @@ window.addEventListener('DOMContentLoaded', function(){
        
     })   
     elements.addBTN.addEventListener("click", function(){
-        let location
+        let locale
         elements.current_locale.forEach(function(e){
-            location = e.textContent;
+            locale = e.textContent;
         })
-        createWidgets(location, condition_extract.textContent, elements.currentTime.textContent);
+        createWidgets(locale, condition_extract.textContent, elements.currentTime.textContent, now_temp);
+        
+        
         console.log("Hello")
     })
 })

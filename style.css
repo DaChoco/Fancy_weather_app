@@ -119,6 +119,7 @@ nav{
     border-radius: 0.5rem;
     background-color: var(--sunny-widget);
     width: 80%;
+    position: relative;
     margin: 0 auto;
 }
 
@@ -127,6 +128,8 @@ nav{
     background-color: var(--sunny-widget);
     width: 80%;
     margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .night-clear{
@@ -199,6 +202,15 @@ nav{
     font-size: 4rem;
 }
 
+.location-widget .current-temp{
+    font-size: 1.5rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    color: var(--dark-text);
+}
+
 
 .dropsearch{
     position: absolute;
@@ -209,6 +221,7 @@ nav{
     
     color: var(--dark-text);
     width: 100%;
+    z-index: 1000;
     height: max-content;
     border-radius: 0.5rem;
 }
@@ -288,7 +301,7 @@ main.cloudy-day .main-page .forecast-widget .days-container .day-card{
 
 .AddorHide{
     grid-area: highlights;
-    color: var(--sunny-text);
+    color: var(--dark-text);
     transition: 250ms;
 }
 
