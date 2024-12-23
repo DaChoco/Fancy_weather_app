@@ -2,6 +2,7 @@ import { config } from "./config.js";
 
 const days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const d = new Date();
+let content = "";
 
 const todayIndex = d.getDay();
 
@@ -13,7 +14,7 @@ const small_temp = document.querySelectorAll('.small-temp');
 const days_week = document.querySelectorAll('.daysWeek')
 const condition_extract = document.querySelector('.current-conditions')
 const mini_temp = document.querySelector(".mini-temp")
-let now_temp
+
 
 const elements = { //cache everything once this site loads
     searchBar: document.getElementById('search-bar'),
@@ -72,7 +73,7 @@ window.addEventListener("load", async function(){
             e.textContent = conditions;
         })
         backgroundWeather(conditions);
-        elements.locationContainer.innerHTML += localStorage.getItem("Added_Widgets")
+        elements.locationContainer.innerHTML += sessionStorage.getItem("Added_Widgets")
 
         
 
@@ -203,22 +204,23 @@ function displayResults(result){
 }
 
 function createWidgets(location, conditions, time, temp){
-    let content = "";
-    content += `
+    
+    content +=  `
     <li>
         
         <div class="location-widget" id="location-widget-main">
         <h4 class="current-location">${location}</h4>
         <p id="time-now">${time}</p>
         <h5 class="current-conditions">${conditions}</h5>
-        <h5 class="current-temp">${temp}</h5>
+        <h5 class="current-temp">${temp}°C</h5>
         </div>
         
     </li>`
 
     
     elements.locationContainer.innerHTML += content;
-    localStorage.setItem("Added_Widgets", content)
+    sessionStorage.setItem("Added_Widgets", content)
+    content = ""
 
     
 }
@@ -321,6 +323,7 @@ function backgroundWeather(condition){
 //END OF GENERIC FUNCTIONS
 
 window.addEventListener('DOMContentLoaded', function(){
+    let now_temp = 0;
 
     elements.searchBar.addEventListener('input',debounceSearch(function(){ //search auto completions
         let result = [];
@@ -339,6 +342,7 @@ window.addEventListener('DOMContentLoaded', function(){
     
 
     elements.searchBar.addEventListener('keydown', async function(e){
+        
         if (e.key === 'Enter'){
             
             let location = elements.searchBar.value;
@@ -367,6 +371,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 elements.current_temperature.forEach(function(item){
                     item.textContent = `${current_temp}°C`;
                     now_temp = current_temp;
+                    console.log(now_temp)
                 })
 
                 elements.current_conditions.forEach(function(e){
@@ -389,8 +394,6 @@ window.addEventListener('DOMContentLoaded', function(){
             locale = e.textContent;
         })
         createWidgets(locale, condition_extract.textContent, elements.currentTime.textContent, now_temp);
-        
-        
         console.log("Hello")
     })
 })

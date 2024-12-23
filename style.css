@@ -202,6 +202,10 @@ nav{
     font-size: 4rem;
 }
 
+.location-widget h4{
+    position: relative;
+}
+
 .location-widget .current-temp{
     font-size: 1.5rem;
     position: absolute;
